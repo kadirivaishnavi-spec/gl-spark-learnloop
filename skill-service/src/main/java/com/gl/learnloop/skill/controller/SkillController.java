@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/skills")
@@ -110,11 +111,13 @@ public class SkillController {
 
     // Delete Skill
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSkill(
+    public ResponseEntity<Map<String, String>> deleteSkill(
             @PathVariable Long id) {
 
         skillService.deleteSkill(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                Map.of("message", "Skill deleted successfully")
+        );
     }
 }
