@@ -2,6 +2,7 @@ package com.gl.learnloop.user.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,11 +17,21 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+
+                        // Registration and login
                         .requestMatchers(
                                 "/api/users/register",
                                 "/api/users/login",
                                 "/actuator/health"
                         ).permitAll()
+
+                        // Allow other services to retrieve user information
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/users/**"
+                        ).permitAll()
+
+                        // Other APIs require authentication
                         .anyRequest().authenticated()
                 );
 

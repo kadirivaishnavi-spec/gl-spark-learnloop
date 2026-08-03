@@ -21,6 +21,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    // Register User
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(
             @Valid @RequestBody UserRegistrationRequest request) {
@@ -38,6 +39,7 @@ public class UserController {
                 .body(response);
     }
 
+    // Login User
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
             @Valid @RequestBody LoginRequest request) {
@@ -50,5 +52,21 @@ public class UserController {
         return ResponseEntity.ok(
                 new LoginResponse(token)
         );
+    }
+
+    // Get User by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getUserById(
+            @PathVariable Long id) {
+
+        User user = userService.getUserById(id);
+
+        UserResponse response = new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
+        );
+
+        return ResponseEntity.ok(response);
     }
 }

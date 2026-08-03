@@ -12,6 +12,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // Handle validation errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationErrors(
             MethodArgumentNotValidException ex) {
@@ -32,12 +33,25 @@ public class GlobalExceptionHandler {
                 .body(errors);
     }
 
+    // Handle runtime exceptions
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeException(
             RuntimeException ex) {
 
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        // User does not exist
+        if (ex.getMessage() != null &&
+                ex.getMessage().startsWith("User not found")) {
+
+            status = HttpStatus.NOT_FOUND;
+        }
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
         return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(Map.of("error", ex.getMessage()));
+                .status(status)
+                .body(error);
     }
 }

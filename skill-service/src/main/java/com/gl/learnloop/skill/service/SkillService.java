@@ -1,5 +1,6 @@
 package com.gl.learnloop.skill.service;
 
+import com.gl.learnloop.skill.client.UserFeignClient;
 import com.gl.learnloop.skill.dto.SkillRequest;
 import com.gl.learnloop.skill.entity.Skill;
 import com.gl.learnloop.skill.repository.SkillRepository;
@@ -11,12 +12,19 @@ import java.util.List;
 public class SkillService {
 
     private final SkillRepository skillRepository;
+    private final UserFeignClient userFeignClient;
 
-    public SkillService(SkillRepository skillRepository) {
+    public SkillService(
+            SkillRepository skillRepository,
+            UserFeignClient userFeignClient) {
+
         this.skillRepository = skillRepository;
+        this.userFeignClient = userFeignClient;
     }
 
     public Skill createSkill(SkillRequest request) {
+
+        userFeignClient.getUserById(request.getUserId());
 
         Skill skill = new Skill();
 
@@ -34,13 +42,16 @@ public class SkillService {
     }
 
     public Skill getSkillById(Long id) {
-
         return skillRepository.findById(id)
                 .orElseThrow(() ->
                         new RuntimeException("Skill not found"));
     }
 
     public List<Skill> getSkillsByUserId(Long userId) {
+
+        // First verify that the user exists
+        userFeignClient.getUserById(userId);
+
         return skillRepository.findByUserId(userId);
     }
 
@@ -54,7 +65,11 @@ public class SkillService {
 
     public Skill updateSkill(Long id, SkillRequest request) {
 
-        Skill skill = getSkillById(id);
+        Skill skill = skillRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Skill not found"));
+
+        userFeignClient.getUserById(request.getUserId());
 
         skill.setName(request.getName());
         skill.setDescription(request.getDescription());
