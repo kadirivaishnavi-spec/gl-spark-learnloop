@@ -5,7 +5,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface MatchRepository extends JpaRepository<Match, Long> {
+public interface MatchRepository
+        extends JpaRepository<Match, Long> {
+
+    /*
+     * Get matches where the user is either side of the match.
+     */
+    List<Match> findByUserIdOrMatchedUserId(
+            Long userId,
+            Long matchedUserId
+    );
 
     List<Match> findByUserId(Long userId);
 

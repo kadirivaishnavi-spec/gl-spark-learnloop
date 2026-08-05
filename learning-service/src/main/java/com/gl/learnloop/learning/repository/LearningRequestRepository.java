@@ -13,5 +13,9 @@ public interface LearningRequestRepository
     List<LearningRequest> findBySkillId(Long skillId);
 
     List<LearningRequest> findByStatus(String status);
-}
 
+    List<LearningRequest> findByLearnerIdAndStatus(
+            Long learnerId,
+            String status
+    );
+}

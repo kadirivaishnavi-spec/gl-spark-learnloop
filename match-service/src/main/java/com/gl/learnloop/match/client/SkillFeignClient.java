@@ -1,5 +1,6 @@
 package com.gl.learnloop.match.client;
 
+import com.gl.learnloop.match.dto.SkillResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,5 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface SkillFeignClient {
 
     @GetMapping("/api/skills/{id}")
-    Object getSkillById(@PathVariable("id") Long id);
+    SkillResponse getSkillById(
+            @PathVariable("id") Long id
+    );
 }

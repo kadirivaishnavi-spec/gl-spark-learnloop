@@ -3,6 +3,7 @@ package com.gl.learnloop.user.service;
 import com.gl.learnloop.user.dto.UserRegistrationRequest;
 import com.gl.learnloop.user.entity.User;
 import com.gl.learnloop.user.repository.UserRepository;
+import com.gl.learnloop.user.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     // Register User
     public User register(UserRegistrationRequest request) {
@@ -46,11 +48,7 @@ public class UserService {
             throw new RuntimeException("Invalid email or password");
         }
 
-        // Keep your existing JWT generation code here.
-        // Example:
-        // return jwtService.generateToken(user.getEmail());
-
-        return "your-existing-jwt-token";
+        return jwtService.generateToken(user);
     }
 
     // Get User by ID
@@ -58,6 +56,9 @@ public class UserService {
 
         return userRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("User not found with id: " + id));
+                        new RuntimeException(
+                                "User not found with id: " + id
+                        )
+                );
     }
 }

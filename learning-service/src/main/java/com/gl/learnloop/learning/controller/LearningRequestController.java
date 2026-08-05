@@ -58,7 +58,8 @@ public class LearningRequestController {
                 learningRequestService.getRequestById(id);
 
         return ResponseEntity.ok(
-                new LearningRequestResponse(learningRequest));
+                new LearningRequestResponse(learningRequest)
+        );
     }
 
     // Get requests by Learner ID
@@ -70,6 +71,26 @@ public class LearningRequestController {
         List<LearningRequestResponse> requests =
                 learningRequestService
                         .getRequestsByLearnerId(learnerId)
+                        .stream()
+                        .map(LearningRequestResponse::new)
+                        .toList();
+
+        return ResponseEntity.ok(requests);
+    }
+
+    // Get pending requests by Learner ID
+    // Used by Match Service to find reciprocal requests
+    @GetMapping("/learner/{learnerId}/pending")
+    public ResponseEntity<List<LearningRequestResponse>>
+    getPendingRequestsByLearnerId(
+            @PathVariable Long learnerId) {
+
+        List<LearningRequestResponse> requests =
+                learningRequestService
+                        .getRequestsByLearnerIdAndStatus(
+                                learnerId,
+                                "PENDING"
+                        )
                         .stream()
                         .map(LearningRequestResponse::new)
                         .toList();
@@ -119,11 +140,12 @@ public class LearningRequestController {
                 learningRequestService.updateRequest(id, request);
 
         return ResponseEntity.ok(
-                new LearningRequestResponse(learningRequest));
+                new LearningRequestResponse(learningRequest)
+        );
     }
 
     // Update Status
-    @PatchMapping("/{id}/status")
+    @PutMapping("/{id}/status")
     public ResponseEntity<LearningRequestResponse> updateStatus(
             @PathVariable Long id,
             @RequestParam String status) {
@@ -132,7 +154,8 @@ public class LearningRequestController {
                 learningRequestService.updateStatus(id, status);
 
         return ResponseEntity.ok(
-                new LearningRequestResponse(learningRequest));
+                new LearningRequestResponse(learningRequest)
+        );
     }
 
     // Delete Learning Request
@@ -143,6 +166,7 @@ public class LearningRequestController {
         learningRequestService.deleteRequest(id);
 
         return ResponseEntity.ok(
-                "Learning request deleted successfully");
+                "Learning request deleted successfully"
+        );
     }
 }

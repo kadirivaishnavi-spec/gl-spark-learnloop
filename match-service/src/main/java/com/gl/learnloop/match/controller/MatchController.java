@@ -17,120 +17,195 @@ public class MatchController {
 
     private final MatchService matchService;
 
-    public MatchController(MatchService matchService) {
+    public MatchController(
+            MatchService matchService) {
+
         this.matchService = matchService;
     }
 
-    // Create Match
+
+    // =========================================================
+    // CREATE MATCH
+    // =========================================================
+
     @PostMapping
     public ResponseEntity<MatchResponse> createMatch(
             @Valid @RequestBody MatchRequest request) {
 
-        Match match = matchService.createMatch(request);
+        Match match =
+                matchService.createMatch(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new MatchResponse(match));
+                .body(
+                        matchService.toResponse(match)
+                );
     }
 
-    // Get all Matches
+
+    // =========================================================
+    // GET ALL MATCHES
+    // =========================================================
+
     @GetMapping
-    public ResponseEntity<List<MatchResponse>> getAllMatches() {
+    public ResponseEntity<List<MatchResponse>>
+    getAllMatches() {
 
         List<MatchResponse> matches =
                 matchService.getAllMatches()
                         .stream()
-                        .map(MatchResponse::new)
+                        .map(matchService::toResponse)
                         .toList();
 
         return ResponseEntity.ok(matches);
     }
 
-    // Get Match by ID
+
+    // =========================================================
+    // GET MATCH BY ID
+    // =========================================================
+
     @GetMapping("/{id}")
-    public ResponseEntity<MatchResponse> getMatchById(
+    public ResponseEntity<MatchResponse>
+    getMatchById(
             @PathVariable Long id) {
 
-        Match match = matchService.getMatchById(id);
+        Match match =
+                matchService.getMatchById(id);
 
-        return ResponseEntity.ok(new MatchResponse(match));
+        return ResponseEntity.ok(
+                matchService.toResponse(match)
+        );
     }
 
-    // Get matches by User ID
+
+    // =========================================================
+    // GET MATCHES FOR USER
+    // =========================================================
+
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<MatchResponse>> getMatchesByUserId(
+    public ResponseEntity<List<MatchResponse>>
+    getMatchesByUserId(
             @PathVariable Long userId) {
 
         List<MatchResponse> matches =
-                matchService.getMatchesByUserId(userId)
+                matchService
+                        .getMatchesByUserId(userId)
                         .stream()
-                        .map(MatchResponse::new)
+                        .map(match ->
+                                matchService.toResponse(
+                                        match,
+                                        userId
+                                )
+                        )
                         .toList();
 
         return ResponseEntity.ok(matches);
     }
 
-    // Get matches by Matched User ID
+
+    // =========================================================
+    // GET MATCHES BY MATCHED USER
+    // =========================================================
+
     @GetMapping("/matched-user/{matchedUserId}")
-    public ResponseEntity<List<MatchResponse>> getMatchesByMatchedUserId(
+    public ResponseEntity<List<MatchResponse>>
+    getMatchesByMatchedUserId(
             @PathVariable Long matchedUserId) {
 
         List<MatchResponse> matches =
-                matchService.getMatchesByMatchedUserId(matchedUserId)
+                matchService
+                        .getMatchesByMatchedUserId(
+                                matchedUserId
+                        )
                         .stream()
-                        .map(MatchResponse::new)
+                        .map(match ->
+                                matchService.toResponse(
+                                        match,
+                                        matchedUserId
+                                )
+                        )
                         .toList();
 
         return ResponseEntity.ok(matches);
     }
 
-    // Get matches by Skill ID
+
+    // =========================================================
+    // GET MATCHES BY SKILL
+    // =========================================================
+
     @GetMapping("/skill/{skillId}")
-    public ResponseEntity<List<MatchResponse>> getMatchesBySkillId(
+    public ResponseEntity<List<MatchResponse>>
+    getMatchesBySkillId(
             @PathVariable Long skillId) {
 
         List<MatchResponse> matches =
-                matchService.getMatchesBySkillId(skillId)
+                matchService
+                        .getMatchesBySkillId(skillId)
                         .stream()
-                        .map(MatchResponse::new)
+                        .map(matchService::toResponse)
                         .toList();
 
         return ResponseEntity.ok(matches);
     }
 
-    // Get matches by Status
+
+    // =========================================================
+    // GET MATCHES BY STATUS
+    // =========================================================
+
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<MatchResponse>> getMatchesByStatus(
+    public ResponseEntity<List<MatchResponse>>
+    getMatchesByStatus(
             @PathVariable String status) {
 
         List<MatchResponse> matches =
-                matchService.getMatchesByStatus(status)
+                matchService
+                        .getMatchesByStatus(status)
                         .stream()
-                        .map(MatchResponse::new)
+                        .map(matchService::toResponse)
                         .toList();
 
         return ResponseEntity.ok(matches);
     }
 
-    // Update Match Status
+
+    // =========================================================
+    // UPDATE MATCH STATUS
+    // =========================================================
+
     @PatchMapping("/{id}/status")
-    public ResponseEntity<MatchResponse> updateStatus(
+    public ResponseEntity<MatchResponse>
+    updateStatus(
             @PathVariable Long id,
             @RequestParam String status) {
 
-        Match match = matchService.updateStatus(id, status);
+        Match match =
+                matchService.updateStatus(
+                        id,
+                        status
+                );
 
-        return ResponseEntity.ok(new MatchResponse(match));
+        return ResponseEntity.ok(
+                matchService.toResponse(match)
+        );
     }
 
-    // Delete Match
+
+    // =========================================================
+    // DELETE MATCH
+    // =========================================================
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteMatch(
+    public ResponseEntity<String>
+    deleteMatch(
             @PathVariable Long id) {
 
         matchService.deleteMatch(id);
 
         return ResponseEntity.ok(
-                "Match deleted successfully");
+                "Match deleted successfully"
+        );
     }
 }

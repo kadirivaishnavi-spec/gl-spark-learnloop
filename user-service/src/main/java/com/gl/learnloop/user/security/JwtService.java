@@ -1,5 +1,6 @@
 package com.gl.learnloop.user.security;
 
+import com.gl.learnloop.user.entity.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,12 +27,13 @@ public class JwtService {
         this.expiration = expiration;
     }
 
-    public String generateToken(String email) {
+    public String generateToken(User user) {
 
         Date now = new Date();
 
         return Jwts.builder()
-                .subject(email)
+                .subject(user.getEmail())
+                .claim("userId", user.getId())
                 .issuedAt(now)
                 .expiration(
                         new Date(now.getTime() + expiration)

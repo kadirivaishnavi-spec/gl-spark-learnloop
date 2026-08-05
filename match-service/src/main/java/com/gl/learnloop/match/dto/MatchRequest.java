@@ -18,4 +18,7 @@ public class MatchRequest {
 
     @NotNull(message = "Skill ID is required")
     private Long skillId;
+
+    @NotNull(message = "Learning Request ID is required")
+    private Long learningRequestId;
 }
