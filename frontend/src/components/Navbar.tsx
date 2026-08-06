@@ -17,7 +17,7 @@ function Navbar() {
                 <Logo size={38} />
                 <div className="navbar-brand-text">
                     <span className="navbar-brand">LearnLoop</span>
-                    <span className="navbar-tagline">Skill Sharing Platform</span>
+                    <span className="navbar-tagline">Learn Together. Grow Together.</span>
                 </div>
             </div>
 
